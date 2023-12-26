@@ -9,29 +9,24 @@ pipeline{
                steps{
 		 echo 'cloning..'
                  git 'https://github.com/akshu20791/DevOpsClassCodes.git'
-              }
-          }
-          stage('Compile'){
-             
+               }
+           }
+            stage('Compile'){
               steps{
                   echo 'compiling..'
                   sh 'mvn compile'
-	      }
+              }
           }
-          
           stage('Package'){
-		  
               steps{
-		  
                   sh 'mvn package'
               }
           }
-	     stage('deploy'){
-    steps{
-        sh 'sudo cp -f /var/lib/jenkins/workspace/project/target/*.war /opt/tomcat/apache-tomcat-8.5.93/webapps/'
-    }
-}
-
-          
+          	     stage('deploy'){
+                    steps{
+                       sh 'sudo scp -i /home/ubuntu/key_practice.pem /var/lib/jenkins/workspace/My_first_pipeline/target/addressbook.war ec2-user@172.31.35.212:/opt/tomcat/webapps/'
+                       recordIssues(tools: [pmdParser()])
+                    }
+          	     }
       }
 }
